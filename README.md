@@ -215,4 +215,12 @@ router.post('/protected-route', authMiddleware, controller);
 
 ## License
 
-ISC
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
+
+This means:
+- ✅ Free to use, modify, and distribute
+- ✅ Commercial use allowed
+- ⚠️ If you run a modified version as a service, you must share your source code
+- 📧 For commercial licensing without AGPL requirements, contact: tato@famcorrea.com
+
+See [LICENSE](LICENSE) for full details.
