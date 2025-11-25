@@ -8,7 +8,7 @@ import { app } from '../setup';
 let testTeam: any;
 
 beforeAll(async () => {
-    testTeam = await createTestTeam('Integration Test Team', 'Test Region');
+    testTeam = await createTestTeam();
 });
 
 afterAll(async () => {
@@ -18,7 +18,7 @@ afterAll(async () => {
 describe('Team API Endpoints', () => {
     describe('GET /api/teams', () => {
         it('should return all teams', async () => {
-            const team = await createTestTeam('Integration Test Team', 'Test Region');
+            const team = await createTestTeam();
 
             const response = await request(app).get('/api/teams');
 
@@ -31,8 +31,9 @@ describe('Team API Endpoints', () => {
 
     describe('POST /api/teams', () => {
         it('should create a new team', async () => {
+            const timestamp = Date.now();
             const newTeam = {
-                name: 'New Test Team',
+                name: `New Test Team ${timestamp}`,
                 region: 'New Region'
             };
 
@@ -78,7 +79,8 @@ describe('Team API Endpoints', () => {
     describe('PUT /api/teams/:id', () => {
         it('should update a team', async () => {
             const team = await createTestTeam();
-            const updates = { name: 'Updated Team Name' };
+            const timestamp = Date.now();
+            const updates = { name: `Updated Team Name ${timestamp}` };
 
             const response = await request(app)
                 .put(`/api/teams/${team.id}`)

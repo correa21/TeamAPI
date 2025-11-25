@@ -31,10 +31,13 @@ export async function cleanupTestData() {
 /**
  * Create test team
  */
-export async function createTestTeam(name = 'Test Team', region = 'Test Region') {
+export async function createTestTeam(name?: string, region = 'Test Region') {
+    const timestamp = Date.now();
+    const teamName = name || `Test Team ${timestamp}`;
+
     const { data, error } = await testSupabase
         .from('team')
-        .insert({ name, region })
+        .insert({ name: teamName, region })
         .select()
         .single();
 
@@ -52,7 +55,8 @@ export async function createTestPlayer(teamId: string, overrides: any = {}) {
         player_name: `Test Player ${timestamp}`,
         date_of_birth: '1995-01-01',
         curp: `TEST${timestamp.toString().slice(-12)}`,
-        email: `test${timestamp}@example.com`,
+        email: `test${timestamp}@gmail.com`,
+        password: 'hashedPasswordPlaceholder', // Placeholder since auth is handled separately
         federation_id: parseInt(timestamp.toString().slice(-6)),
         eligibility: true,
         ...overrides
@@ -90,7 +94,7 @@ export async function createTestSeason(name?: string, modality = '15s') {
  */
 export async function createTestAuthUser(email?: string, password = 'testpass123') {
     const timestamp = Date.now();
-    const userEmail = email || `test${timestamp}@example.com`;
+    const userEmail = email || `test${timestamp}@gmail.com`;
 
     const { data, error } = await testSupabase.auth.admin.createUser({
         email: userEmail,
