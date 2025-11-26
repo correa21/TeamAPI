@@ -213,6 +213,25 @@ import { authMiddleware } from './middleware/auth.middleware';
 router.post('/protected-route', authMiddleware, controller);
 ```
 
+## Testing
+
+### Automated Tests
+
+Run the test suite:
+```bash
+npm test                 # Run all tests
+npm run test:watch       # Watch mode
+npm run test:coverage    # With coverage
+```
+
+### Manual Testing
+
+- **Web Interface**: http://localhost:3000/auth-test.html
+- **Swagger UI**: http://localhost:3000/api-docs
+- **Postman**: Import `Rugby_Team_API.postman_collection.json`
+
+📖 **[Complete Testing Guide →](TESTING.md)**
+
 ## License
 
 This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.

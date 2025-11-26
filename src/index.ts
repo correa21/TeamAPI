@@ -57,17 +57,19 @@ app.use('/api', routes);
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
+// Start server only if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server is running on port ${PORT}`);
+        console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+        console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
 
-    // Validate environment variables
-    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
-        console.warn('⚠️  WARNING: Supabase environment variables are not set!');
-        console.warn('   Please create a .env file with SUPABASE_URL and SUPABASE_ANON_KEY');
-    }
-});
+        // Validate environment variables
+        if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+            console.warn('⚠️  WARNING: Supabase environment variables are not set!');
+            console.warn('   Please create a .env file with SUPABASE_URL and SUPABASE_ANON_KEY');
+        }
+    });
+}
 
 export default app;

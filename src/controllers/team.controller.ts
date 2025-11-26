@@ -26,8 +26,16 @@ export const getTeamById = async (req: Request, res: Response) => {
             .eq('id', id)
             .single();
 
-        if (error) throw error;
+        if (error) {
+            // If no rows found, Supabase returns a PGRST116 error
+            if (error.code === 'PGRST116') {
+                return res.status(404).json({ success: false, error: 'Team not found' });
+            }
+            // Handle other database errors
+            return res.status(500).json({ success: false, error: error.message });
+        }
         if (!data) {
+            // Handle not-found without throwing
             return res.status(404).json({ success: false, error: 'Team not found' });
         }
 
@@ -40,6 +48,12 @@ export const getTeamById = async (req: Request, res: Response) => {
 export const createTeam = async (req: Request, res: Response) => {
     try {
         const teamData: CreateTeamDTO = req.body;
+
+        // Basic validation for missing fields (assuming 'name' is required)
+        if (!teamData.name) {
+            return res.status(400).json({ success: false, error: 'Team name is required' });
+        }
+
         const { data, error } = await supabase
             .from('team')
             .insert([teamData])
