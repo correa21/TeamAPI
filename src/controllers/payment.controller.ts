@@ -4,7 +4,7 @@ import { CreatePaymentsDTO, UpdatePaymentsDTO } from '../types/database.types';
 
 export const getAllPayments = async (req: Request, res: Response) => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('payments')
             .select('*')
             .order('created_at', { ascending: false });
@@ -20,7 +20,7 @@ export const getAllPayments = async (req: Request, res: Response) => {
 export const getPaymentByPlayerId = async (req: Request, res: Response) => {
     try {
         const { playerId } = req.params;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('payments')
             .select('*')
             .eq('player_id', playerId)
@@ -39,7 +39,7 @@ export const getPaymentByPlayerId = async (req: Request, res: Response) => {
 
 export const getPlayersWithDebt = async (req: Request, res: Response) => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('payments')
             .select('*')
             .eq('debt', true)
@@ -56,7 +56,7 @@ export const getPlayersWithDebt = async (req: Request, res: Response) => {
 export const createPayment = async (req: Request, res: Response) => {
     try {
         const paymentData: CreatePaymentsDTO = req.body;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('payments')
             .insert([paymentData])
             .select()
@@ -75,7 +75,7 @@ export const updatePayment = async (req: Request, res: Response) => {
         const { id } = req.params;
         const paymentData: UpdatePaymentsDTO = req.body;
 
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('payments')
             .update(paymentData)
             .eq('id', id)
@@ -96,7 +96,7 @@ export const updatePayment = async (req: Request, res: Response) => {
 export const deletePayment = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase.from('payments').delete().eq('id', id);
+        const { error } = await (req.supabase || supabase).from('payments').delete().eq('id', id);
 
         if (error) throw error;
 

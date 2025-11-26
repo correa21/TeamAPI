@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { supabase } from '../config/supabase';
+import { supabaseAdmin } from '../config/supabase';
 import { CreatePlayerDTO } from '../types/database.types';
 
 /**
@@ -18,7 +18,7 @@ export const register = async (req: Request, res: Response) => {
         }
 
         // 1. Create Supabase Auth user
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        const { data: authData, error: authError } = await supabaseAdmin.auth.signUp({
             email,
             password,
             options: {
@@ -43,7 +43,7 @@ export const register = async (req: Request, res: Response) => {
         }
 
         // 2. Create player record linked to auth user
-        const { data: player, error: playerError } = await supabase
+        const { data: player, error: playerError } = await supabaseAdmin
             .from('player')
             .insert([
                 {
@@ -58,7 +58,7 @@ export const register = async (req: Request, res: Response) => {
 
         if (playerError) {
             // Rollback: delete the auth user if player creation fails
-            await supabase.auth.admin.deleteUser(authData.user.id);
+            await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
             return res.status(400).json({
                 success: false,
                 error: playerError.message
@@ -96,7 +96,7 @@ export const login = async (req: Request, res: Response) => {
             });
         }
 
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabaseAdmin.auth.signInWithPassword({
             email,
             password
         });
@@ -109,7 +109,7 @@ export const login = async (req: Request, res: Response) => {
         }
 
         // Get associated player info
-        const { data: player } = await supabase
+        const { data: player } = await supabaseAdmin
             .from('player')
             .select('*')
             .eq('auth_user_id', data.user.id)
@@ -137,7 +137,7 @@ export const login = async (req: Request, res: Response) => {
  */
 export const logout = async (req: Request, res: Response) => {
     try {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await (req.supabase || supabaseAdmin).auth.signOut();
 
         if (error) {
             return res.status(400).json({
@@ -173,7 +173,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
         }
 
         // Get associated player info
-        const { data: player } = await supabase
+        const { data: player } = await req.supabase
             .from('player')
             .select('*')
             .eq('auth_user_id', user.id)
@@ -208,7 +208,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
             });
         }
 
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        const { error } = await supabaseAdmin.auth.resetPasswordForEmail(email, {
             redirectTo: 'http://localhost:3000/reset-password'
         });
 

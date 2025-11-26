@@ -225,19 +225,31 @@ teamAPI/
 └── package.json
 ```
 
+## Security & RLS
+
+This project uses **Row Level Security (RLS)** to protect data at the database level.
+
+- **Public Access**: Read-only access to non-sensitive data (Teams, Seasons, Stats).
+- **Authenticated Access**: Users can view and update their own profiles.
+- **Admin Access**: Admins have full access to manage the system.
+- **Privacy**: Public player lists use the `roster_view` to hide PII (email, phone, etc.).
+
 ## Database Schema
 
 The database includes the following tables:
 - `team` - Team information
-- `player` - Player details
+- `player` - Player details (RLS protected)
 - `player_number` - Jersey numbers
 - `affiliations` - Federation/association status
-- `payments` - Financial records
+- `payments` - Financial records (RLS protected)
 - `admin` - Admin roles
 - `season` - Season information
 - `stats` - Player statistics
 
-See `supabase/migrations/001_initial_schema.sql` for full schema details.
+**Views:**
+- `roster_view` - Publicly accessible view of players (hides sensitive PII)
+
+See `supabase/migrations/` for full schema details.
 
 ## Authentication
 

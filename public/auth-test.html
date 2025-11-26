@@ -5,206 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rugby Team - Auth Test</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo h1 {
-            color: #667eea;
-            font-size: 32px;
-            margin-bottom: 5px;
-        }
-
-        .logo p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: #f0f0f0;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background: #e0e0e0;
-        }
-
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .result.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .result.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .user-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        .user-info h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .user-info pre {
-            background: white;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-            font-size: 12px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .api-test {
-            margin-top: 20px;
-        }
-
-        .api-test h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .api-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/auth-test.css">
 </head>
 
 <body>
@@ -215,9 +16,9 @@
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="showTab('login')">Login</button>
-            <button class="tab" onclick="showTab('register')">Register</button>
-            <button class="tab" onclick="showTab('test')">API Test</button>
+            <button id="tab-login" class="tab active">Login</button>
+            <button id="tab-register" class="tab">Register</button>
+            <button id="tab-test" class="tab">API Test</button>
         </div>
 
         <!-- Login Form -->
@@ -264,8 +65,7 @@
                         <option value="">Loading teams...</option>
                     </select>
                     <small style="color: #666; font-size: 12px;">
-                        No teams? <a href="#" onclick="showCreateTeamHelp(); return false;"
-                            style="color: #667eea;">Create one first</a>
+                        No teams? <a href="#" id="create-team-help" style="color: #667eea;">Create one first</a>
                     </small>
                 </div>
                 <div class="form-group">
@@ -302,12 +102,12 @@
                 <div class="api-test">
                     <h3>Test API Endpoints</h3>
                     <div class="api-buttons">
-                        <button class="btn btn-secondary" onclick="testEndpoint('/api/teams')">Get Teams</button>
-                        <button class="btn btn-secondary" onclick="testEndpoint('/api/players')">Get Players</button>
-                        <button class="btn btn-secondary" onclick="testEndpoint('/api/auth/me')">Get Profile</button>
-                        <button class="btn btn-secondary" onclick="testEndpoint('/api/seasons')">Get Seasons</button>
+                        <button id="btn-test-teams" class="btn btn-secondary">Get Teams</button>
+                        <button id="btn-test-players" class="btn btn-secondary">Get Players</button>
+                        <button id="btn-test-profile" class="btn btn-secondary">Get Profile</button>
+                        <button id="btn-test-seasons" class="btn btn-secondary">Get Seasons</button>
                     </div>
-                    <button class="btn btn-danger" onclick="logout()" style="margin-top: 15px;">Logout</button>
+                    <button id="btn-logout" class="btn btn-danger" style="margin-top: 15px;">Logout</button>
                 </div>
             </div>
         </div>
@@ -316,217 +116,7 @@
         <div id="result" class="result"></div>
     </div>
 
-    <script>
-        const API_URL = 'http://localhost:3000/api';
-        let authToken = localStorage.getItem('authToken');
-        let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-
-        // Load teams on page load
-        async function loadTeams() {
-            try {
-                const response = await fetch(`${API_URL}/teams`);
-                const data = await response.json();
-
-                const teamSelect = document.getElementById('teamId');
-                teamSelect.innerHTML = '';
-
-                if (data.success && data.data.length > 0) {
-                    teamSelect.innerHTML = '<option value="">Select a team...</option>';
-                    data.data.forEach(team => {
-                        const option = document.createElement('option');
-                        option.value = team.id;
-                        option.textContent = `${team.name} (${team.region})`;
-                        teamSelect.appendChild(option);
-                    });
-                } else {
-                    teamSelect.innerHTML = '<option value="">No teams available - Create one first!</option>';
-                }
-            } catch (error) {
-                console.error('Error loading teams:', error);
-                document.getElementById('teamId').innerHTML = '<option value="">Error loading teams</option>';
-            }
-        }
-
-        // Show help for creating a team
-        function showCreateTeamHelp() {
-            const message = `To create a team, use this command in terminal:\n\ncurl -X POST http://localhost:3000/api/teams \\\n  -H "Content-Type: application/json" \\\n  -d '{"name": "My Team", "region": "My Region"}'\n\nOr use Swagger UI at http://localhost:3000/api-docs`;
-            alert(message);
-        }
-
-        // Update UI based on auth state
-        function updateAuthUI() {
-            const loggedInSection = document.getElementById('loggedIn');
-            const loggedOutSection = document.getElementById('loggedOut');
-
-            if (authToken && currentUser) {
-                loggedInSection.classList.remove('hidden');
-                loggedOutSection.classList.add('hidden');
-                document.getElementById('userDisplay').textContent = JSON.stringify(currentUser, null, 2);
-            } else {
-                loggedInSection.classList.add('hidden');
-                loggedOutSection.classList.remove('hidden');
-            }
-        }
-
-        // Show result message
-        function showResult(message, isSuccess) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.textContent = message;
-            resultDiv.className = isSuccess ? 'result success' : 'result error';
-            resultDiv.style.display = 'block';
-            setTimeout(() => {
-                resultDiv.style.display = 'none';
-            }, 5000);
-        }
-
-        // Switch tabs
-        function showTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-
-            event.target.classList.add('active');
-            document.getElementById(`${tab}-section`).classList.add('active');
-
-            if (tab === 'test') {
-                updateAuthUI();
-            }
-        }
-
-        // Login
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            try {
-                const response = await fetch(`${API_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password }),
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    authToken = data.data.token;
-                    currentUser = {
-                        email: data.data.user.email,
-                        id: data.data.user.id,
-                        player: data.data.player
-                    };
-
-                    localStorage.setItem('authToken', authToken);
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-                    showResult('Login successful!', true);
-                    setTimeout(() => {
-                        showTab('test');
-                        document.querySelector('.tab:last-child').click();
-                    }, 1000);
-                } else {
-                    showResult(data.error || 'Login failed', false);
-                }
-            } catch (error) {
-                showResult('Error: ' + error.message, false);
-            }
-        });
-
-        // Register
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const registerData = {
-                email: document.getElementById('registerEmail').value,
-                password: document.getElementById('registerPassword').value,
-                player_name: document.getElementById('playerName').value,
-                date_of_birth: document.getElementById('dateOfBirth').value,
-                curp: document.getElementById('curp').value,
-                team_id: document.getElementById('teamId').value,
-                federation_id: parseInt(document.getElementById('federationId').value),
-                phone_number: document.getElementById('phoneNumber').value || null,
-                category: document.getElementById('category').value || null,
-                eligibility: true,
-            };
-
-            try {
-                const response = await fetch(`${API_URL}/auth/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(registerData),
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    showResult('Registration successful! You can now login.', true);
-                    setTimeout(() => {
-                        showTab('login');
-                        document.querySelector('.tab:first-child').click();
-                    }, 2000);
-                } else {
-                    showResult(data.error || 'Registration failed', false);
-                }
-            } catch (error) {
-                showResult('Error: ' + error.message, false);
-            }
-        });
-
-        // Test API endpoint
-        async function testEndpoint(endpoint) {
-            try {
-                const response = await fetch(`http://localhost:3000${endpoint}`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                    },
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    showResult(`Success! Check console for response`, true);
-                    console.log('API Response:', data);
-                } else {
-                    showResult(data.error || 'API call failed', false);
-                }
-            } catch (error) {
-                showResult('Error: ' + error.message, false);
-            }
-        }
-
-        // Logout
-        async function logout() {
-            try {
-                await fetch(`${API_URL}/auth/logout`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                    },
-                });
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-
-            authToken = null;
-            currentUser = null;
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('currentUser');
-
-            showResult('Logged out successfully', true);
-            setTimeout(() => {
-                showTab('login');
-                document.querySelector('.tab:first-child').click();
-            }, 1000);
-        }
-
-        // Initialize
-        loadTeams();
-        updateAuthUI();
-    </script>
+    <script src="js/auth-test.js"></script>
 </body>
 
 </html>

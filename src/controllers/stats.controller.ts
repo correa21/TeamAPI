@@ -4,7 +4,7 @@ import { CreateStatsDTO, UpdateStatsDTO } from '../types/database.types';
 
 export const getAllStats = async (req: Request, res: Response) => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('stats')
             .select('*')
             .order('created_at', { ascending: false });
@@ -20,7 +20,7 @@ export const getAllStats = async (req: Request, res: Response) => {
 export const getStatsByPlayerId = async (req: Request, res: Response) => {
     try {
         const { playerId } = req.params;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('stats')
             .select('*')
             .eq('player_id', playerId)
@@ -37,7 +37,7 @@ export const getStatsByPlayerId = async (req: Request, res: Response) => {
 export const getStatsBySeasonId = async (req: Request, res: Response) => {
     try {
         const { seasonId } = req.params;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('stats')
             .select('*')
             .eq('season_id', seasonId)
@@ -54,7 +54,11 @@ export const getStatsBySeasonId = async (req: Request, res: Response) => {
 export const getStatsById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { data, error } = await supabase.from('stats').select('*').eq('id', id).single();
+        const { data, error } = await (req.supabase || supabase)
+            .from('stats')
+            .select('*')
+            .eq('id', id)
+            .single();
 
         if (error) throw error;
         if (!data) {
@@ -70,7 +74,11 @@ export const getStatsById = async (req: Request, res: Response) => {
 export const createStats = async (req: Request, res: Response) => {
     try {
         const statsData: CreateStatsDTO = req.body;
-        const { data, error } = await supabase.from('stats').insert([statsData]).select().single();
+        const { data, error } = await (req.supabase || supabase)
+            .from('stats')
+            .insert([statsData])
+            .select()
+            .single();
 
         if (error) throw error;
 
@@ -85,7 +93,7 @@ export const updateStats = async (req: Request, res: Response) => {
         const { id } = req.params;
         const statsData: UpdateStatsDTO = req.body;
 
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('stats')
             .update(statsData)
             .eq('id', id)
@@ -106,7 +114,7 @@ export const updateStats = async (req: Request, res: Response) => {
 export const deleteStats = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase.from('stats').delete().eq('id', id);
+        const { error } = await (req.supabase || supabase).from('stats').delete().eq('id', id);
 
         if (error) throw error;
 

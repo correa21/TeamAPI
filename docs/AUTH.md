@@ -110,6 +110,10 @@ ALTER TABLE player ADD COLUMN auth_user_id UUID REFERENCES auth.users(id);
 3. User logs in → receives JWT token
 4. Token used for authenticated API calls
 
+### Row Level Security (RLS) & Views
+- **RLS**: Policies enforce that users can only modify their own data.
+- **Views**: The `roster_view` is used for public endpoints (`GET /players`) to ensure sensitive data (PII) is never exposed to unauthenticated users.
+
 ## 🛡️ Security Features
 
 ### JWT Validation

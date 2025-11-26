@@ -4,7 +4,7 @@ import { CreatePlayerNumberDTO, UpdatePlayerNumberDTO } from '../types/database.
 
 export const getAllPlayerNumbers = async (req: Request, res: Response) => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('player_number')
             .select('*')
             .order('player_number', { ascending: true });
@@ -20,7 +20,7 @@ export const getAllPlayerNumbers = async (req: Request, res: Response) => {
 export const getPlayerNumberByPlayerId = async (req: Request, res: Response) => {
     try {
         const { playerId } = req.params;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('player_number')
             .select('*')
             .eq('player_id', playerId)
@@ -40,7 +40,7 @@ export const getPlayerNumberByPlayerId = async (req: Request, res: Response) => 
 export const createPlayerNumber = async (req: Request, res: Response) => {
     try {
         const playerNumberData: CreatePlayerNumberDTO = req.body;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('player_number')
             .insert([playerNumberData])
             .select()
@@ -59,7 +59,7 @@ export const updatePlayerNumber = async (req: Request, res: Response) => {
         const { id } = req.params;
         const playerNumberData: UpdatePlayerNumberDTO = req.body;
 
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('player_number')
             .update(playerNumberData)
             .eq('id', id)
@@ -80,7 +80,10 @@ export const updatePlayerNumber = async (req: Request, res: Response) => {
 export const deletePlayerNumber = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase.from('player_number').delete().eq('id', id);
+        const { error } = await (req.supabase || supabase)
+            .from('player_number')
+            .delete()
+            .eq('id', id);
 
         if (error) throw error;
 

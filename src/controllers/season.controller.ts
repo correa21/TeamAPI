@@ -4,7 +4,7 @@ import { CreateSeasonDTO, UpdateSeasonDTO } from '../types/database.types';
 
 export const getAllSeasons = async (req: Request, res: Response) => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('season')
             .select('*')
             .order('created_at', { ascending: false });
@@ -20,7 +20,11 @@ export const getAllSeasons = async (req: Request, res: Response) => {
 export const getSeasonById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { data, error } = await supabase.from('season').select('*').eq('id', id).single();
+        const { data, error } = await (req.supabase || supabase)
+            .from('season')
+            .select('*')
+            .eq('id', id)
+            .single();
 
         if (error) throw error;
         if (!data) {
@@ -36,7 +40,7 @@ export const getSeasonById = async (req: Request, res: Response) => {
 export const createSeason = async (req: Request, res: Response) => {
     try {
         const seasonData: CreateSeasonDTO = req.body;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('season')
             .insert([seasonData])
             .select()
@@ -55,7 +59,7 @@ export const updateSeason = async (req: Request, res: Response) => {
         const { id } = req.params;
         const seasonData: UpdateSeasonDTO = req.body;
 
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('season')
             .update(seasonData)
             .eq('id', id)
@@ -76,7 +80,7 @@ export const updateSeason = async (req: Request, res: Response) => {
 export const deleteSeason = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase.from('season').delete().eq('id', id);
+        const { error } = await (req.supabase || supabase).from('season').delete().eq('id', id);
 
         if (error) throw error;
 
