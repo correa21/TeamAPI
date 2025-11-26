@@ -9,7 +9,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Install production dependencies
-RUN npm ci --only=production
+RUN npm ci --only=production --ignore-scripts
 
 # Install all dependencies for build
 FROM base AS build
@@ -33,7 +33,7 @@ ENV NODE_ENV=production
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
+  adduser -S nodejs -u 1001
 
 # Copy built files and dependencies
 COPY --from=deps --chown=nodejs:nodejs /app/node_modules ./node_modules
