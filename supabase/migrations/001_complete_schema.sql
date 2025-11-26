@@ -86,6 +86,9 @@ CREATE TABLE IF NOT EXISTS public.season (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Ensure is_current column exists (if table already existed without it)
+ALTER TABLE public.season ADD COLUMN IF NOT EXISTS is_current BOOLEAN DEFAULT false;
+
 -- 1.8 STATS TABLE
 CREATE TABLE IF NOT EXISTS public.stats (
     id SERIAL PRIMARY KEY,
