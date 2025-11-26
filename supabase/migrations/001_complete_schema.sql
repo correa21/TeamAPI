@@ -115,10 +115,19 @@ END;
 $$ language 'plpgsql';
 
 -- Apply trigger to all tables
+DROP TRIGGER IF EXISTS update_team_time ON public.team;
 CREATE TRIGGER update_team_time BEFORE UPDATE ON public.team FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_player_time ON public.player;
 CREATE TRIGGER update_player_time BEFORE UPDATE ON public.player FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_payment_time ON public.payments;
 CREATE TRIGGER update_payment_time BEFORE UPDATE ON public.payments FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_admin_time ON public.admin;
 CREATE TRIGGER update_admin_time BEFORE UPDATE ON public.admin FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_stats_time ON public.stats;
 CREATE TRIGGER update_stats_time BEFORE UPDATE ON public.stats FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================
@@ -153,48 +162,69 @@ ALTER TABLE public.team ENABLE ROW LEVEL SECURITY;
 -- ==========================================
 
 -- 4.1 Payments (Sensitive)
+DROP POLICY IF EXISTS "Payments: View own or Admin" ON public.payments;
 CREATE POLICY "Payments: View own or Admin" ON public.payments 
 FOR SELECT USING (
   (SELECT auth_user_id FROM public.player WHERE id = payments.player_id) = auth.uid() 
   OR public.is_admin()
 );
+
+DROP POLICY IF EXISTS "Payments: Admin write only" ON public.payments;
 CREATE POLICY "Payments: Admin write only" ON public.payments 
 FOR ALL USING (public.is_admin());
 
 -- 4.2 Player Profile (PII Protected)
+DROP POLICY IF EXISTS "Player: View own or Admin" ON public.player;
 CREATE POLICY "Player: View own or Admin" ON public.player 
 FOR SELECT USING (auth_user_id = auth.uid() OR public.is_admin());
 
+DROP POLICY IF EXISTS "Player: Update own or Admin" ON public.player;
 CREATE POLICY "Player: Update own or Admin" ON public.player 
 FOR UPDATE USING (auth_user_id = auth.uid() OR public.is_admin());
 
+DROP POLICY IF EXISTS "Player: Insert on Register" ON public.player;
 CREATE POLICY "Player: Insert on Register" ON public.player 
 FOR INSERT WITH CHECK (auth.uid() = auth_user_id);
 
 -- 4.3 Admin Table (Highly Sensitive)
+DROP POLICY IF EXISTS "Admin: Read by Admins only" ON public.admin;
 CREATE POLICY "Admin: Read by Admins only" ON public.admin 
 FOR SELECT USING (public.is_admin());
--- No write policy for Admin table implies only Service Role (Backend) can promote admins.
 
 -- 4.4 Public Read Data (Stats, Teams, Seasons)
 -- Teams
+DROP POLICY IF EXISTS "Teams: Public read" ON public.team;
 CREATE POLICY "Teams: Public read" ON public.team FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Teams: Admin write" ON public.team;
 CREATE POLICY "Teams: Admin write" ON public.team FOR ALL USING (public.is_admin());
 
 -- Seasons
+DROP POLICY IF EXISTS "Seasons: Public read" ON public.season;
 CREATE POLICY "Seasons: Public read" ON public.season FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Seasons: Admin write" ON public.season;
 CREATE POLICY "Seasons: Admin write" ON public.season FOR ALL USING (public.is_admin());
 
 -- Stats
+DROP POLICY IF EXISTS "Stats: Public read" ON public.stats;
 CREATE POLICY "Stats: Public read" ON public.stats FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Stats: Admin write" ON public.stats;
 CREATE POLICY "Stats: Admin write" ON public.stats FOR ALL USING (public.is_admin());
 
 -- Player Numbers
+DROP POLICY IF EXISTS "Numbers: Public read" ON public.player_number;
 CREATE POLICY "Numbers: Public read" ON public.player_number FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Numbers: Admin write" ON public.player_number;
 CREATE POLICY "Numbers: Admin write" ON public.player_number FOR ALL USING (public.is_admin());
 
 -- Affiliations
+DROP POLICY IF EXISTS "Affiliations: Public read" ON public.affiliations;
 CREATE POLICY "Affiliations: Public read" ON public.affiliations FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Affiliations: Admin write" ON public.affiliations;
 CREATE POLICY "Affiliations: Admin write" ON public.affiliations FOR ALL USING (public.is_admin());
 
 -- ==========================================
