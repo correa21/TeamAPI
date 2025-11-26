@@ -158,26 +158,34 @@ fetch('http://localhost:3000/api/endpoint', {
 }
 ```
 
-### Player
+### Player (Full Model - Admin/Owner)
 ```typescript
 {
   id: number
   team_id: string (UUID)
-  auth_user_id: string (UUID) // Links to Supabase auth
+  auth_user_id: string (UUID)
   player_name: string
   date_of_birth: date
-  curp: string (unique)
-  short_size: string | null
-  jersey_size: string | null
-  email: string (unique)
-  phone_number: string | null
-  password: string (managed by Supabase)
-  federation_id: number (unique)
-  eligibility: boolean
-  category: string | null
-  profile_picture: string | null
-  created_at: datetime
-  updated_at: datetime
+  curp: string
+  email: string
+  phone_number: string
+  // ... other fields
+}
+```
+
+### Player (Public Roster View)
+Returned by `GET /players` for public access.
+```typescript
+{
+  player_id: number
+  team_id: string (UUID)
+  player_name: string
+  category: string
+  profile_picture: string
+  short_size: string
+  jersey_size: string
+  player_number: number
+  team_name: string
 }
 ```
 
@@ -235,6 +243,7 @@ fetch('http://localhost:3000/api/endpoint', {
   id: number
   modality: string (e.g., "15s", "7s")
   name: string (unique)
+  is_current: boolean
   created_at: datetime
   updated_at: datetime
 }

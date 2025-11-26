@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { supabase } from '../config/supabase';
+import { createAuthClient } from '../config/supabase';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -14,11 +14,14 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
         const token = authHeader.substring(7);
 
-        // Verify the JWT token with Supabase
+        // Create scoped client
+        const scopedClient = createAuthClient(token);
+
+        // Verify token
         const {
             data: { user },
             error
-        } = await supabase.auth.getUser(token);
+        } = await scopedClient.auth.getUser();
 
         if (error || !user) {
             return res.status(401).json({
@@ -27,8 +30,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             });
         }
 
-        // Attach user to request object
-        (req as any).user = user;
+        // Attach to request
+        req.supabase = scopedClient;
+        req.user = user;
 
         next();
     } catch (error: any) {
@@ -39,10 +43,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     }
 };
 
-// Optional: Admin role check middleware
 export const adminMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = (req as any).user;
+        const user = req.user;
 
         if (!user) {
             return res.status(401).json({
@@ -51,14 +54,10 @@ export const adminMiddleware = async (req: Request, res: Response, next: NextFun
             });
         }
 
-        // Check if user is an admin
-        const { data, error } = await supabase
-            .from('admin')
-            .select('*')
-            .eq('player_id', user.id)
-            .single();
+        // Check if user is an admin using database function
+        const { data: isAdmin, error } = await req.supabase.rpc('is_admin');
 
-        if (error || !data) {
+        if (error || !isAdmin) {
             return res.status(403).json({
                 success: false,
                 error: 'Forbidden: Admin access required'

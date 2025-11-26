@@ -7,7 +7,12 @@ dotenv.config({ path: '.env.test' });
 const supabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || '';
 
-export const testSupabase = createClient(supabaseUrl, supabaseServiceKey);
+export const testSupabase = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+        autoRefreshToken: false,
+        persistSession: false
+    }
+});
 
 /**
  * Clean up test data from database
@@ -62,7 +67,15 @@ export async function createTestPlayer(teamId: string, overrides: any = {}) {
         ...overrides
     };
 
-    const { data, error } = await testSupabase
+    // Create a fresh client with service key to ensure RLS bypass
+    const serviceClient = createClient(supabaseUrl, supabaseServiceKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false
+        }
+    });
+
+    const { data, error } = await serviceClient
         .from('player')
         .insert(defaultPlayer)
         .select()
@@ -125,4 +138,50 @@ export async function getAuthToken(email: string, password: string) {
 export async function deleteAuthUser(userId: string) {
     const { error } = await testSupabase.auth.admin.deleteUser(userId);
     if (error) console.error('Error deleting auth user:', error);
+}
+
+/**
+ * Create a full admin user flow and return token
+ */
+export async function createTestAdmin() {
+    const timestamp = Date.now();
+    const email = `admin${timestamp}@test.com`;
+    const password = 'adminpass123';
+
+    // 1. Create Auth User
+    const user = await createTestAuthUser(email, password);
+    if (!user) throw new Error('Failed to create auth user');
+
+    // 2. Create Team (for player)
+    const team = await createTestTeam(`Admin Team ${timestamp}`);
+
+    // 3. Create Player linked to Auth User
+    const player = await createTestPlayer(team.id, {
+        auth_user_id: user.id,
+        email: email,
+        player_name: `Admin User ${timestamp}`
+    });
+
+    // 4. Create Admin Record
+    // Use a fresh service client for admin insertion as well
+    const serviceClient = createClient(supabaseUrl, supabaseServiceKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false
+        }
+    });
+
+    const { error: adminError } = await serviceClient
+        .from('admin')
+        .insert({
+            player_id: player.id,
+            role: 'superuser'
+        });
+
+    if (adminError) throw adminError;
+
+    // 5. Get Token
+    const token = await getAuthToken(email, password);
+
+    return { user, player, token };
 }

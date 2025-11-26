@@ -4,7 +4,7 @@ import { CreateAffiliationsDTO, UpdateAffiliationsDTO } from '../types/database.
 
 export const getAllAffiliations = async (req: Request, res: Response) => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('affiliations')
             .select('*')
             .order('created_at', { ascending: false });
@@ -20,7 +20,7 @@ export const getAllAffiliations = async (req: Request, res: Response) => {
 export const getAffiliationByPlayerId = async (req: Request, res: Response) => {
     try {
         const { playerId } = req.params;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('affiliations')
             .select('*')
             .eq('player_id', playerId)
@@ -40,7 +40,7 @@ export const getAffiliationByPlayerId = async (req: Request, res: Response) => {
 export const createAffiliation = async (req: Request, res: Response) => {
     try {
         const affiliationData: CreateAffiliationsDTO = req.body;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('affiliations')
             .insert([affiliationData])
             .select()
@@ -59,7 +59,7 @@ export const updateAffiliation = async (req: Request, res: Response) => {
         const { id } = req.params;
         const affiliationData: UpdateAffiliationsDTO = req.body;
 
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('affiliations')
             .update(affiliationData)
             .eq('id', id)
@@ -80,7 +80,10 @@ export const updateAffiliation = async (req: Request, res: Response) => {
 export const deleteAffiliation = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase.from('affiliations').delete().eq('id', id);
+        const { error } = await (req.supabase || supabase)
+            .from('affiliations')
+            .delete()
+            .eq('id', id);
 
         if (error) throw error;
 

@@ -3,7 +3,8 @@ import {
     cleanupTestData,
     createTestTeam,
     createTestPlayer,
-    createTestSeason
+    createTestSeason,
+    createTestAdmin
 } from '../helpers/testHelpers';
 import { app } from '../setup';
 
@@ -38,7 +39,7 @@ describe('Player API Endpoints', () => {
 
             expect(response.status).toBe(200);
             expect(response.body.success).toBe(true);
-            expect(response.body.data.id).toBe(testPlayer.id);
+            expect(response.body.data.player_id).toBe(testPlayer.id);
         });
     });
 
@@ -67,6 +68,7 @@ describe('Season API Endpoints', () => {
 
     describe('POST /api/seasons', () => {
         it('should create a new season', async () => {
+            const { token } = await createTestAdmin();
             const newSeason = {
                 name: `Test Season ${Date.now()}`,
                 modality: '7s'
@@ -74,6 +76,7 @@ describe('Season API Endpoints', () => {
 
             const response = await request(app)
                 .post('/api/seasons')
+                .set('Authorization', `Bearer ${token}`)
                 .send(newSeason);
 
             expect(response.status).toBe(201);
@@ -89,6 +92,7 @@ describe('Stats API Endpoints', () => {
 
     describe('POST /api/stats', () => {
         it('should create player stats', async () => {
+            const { token } = await createTestAdmin();
             const statsData = {
                 player_id: testPlayer.id,
                 season_id: testSeason.id,
@@ -103,6 +107,7 @@ describe('Stats API Endpoints', () => {
 
             const response = await request(app)
                 .post('/api/stats')
+                .set('Authorization', `Bearer ${token}`)
                 .send(statsData);
 
             expect(response.status).toBe(201);

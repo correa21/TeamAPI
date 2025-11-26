@@ -4,7 +4,7 @@ import { CreateTeamDTO, UpdateTeamDTO } from '../types/database.types';
 
 export const getAllTeams = async (req: Request, res: Response) => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('team')
             .select('*')
             .order('created_at', { ascending: false });
@@ -20,7 +20,11 @@ export const getAllTeams = async (req: Request, res: Response) => {
 export const getTeamById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { data, error } = await supabase.from('team').select('*').eq('id', id).single();
+        const { data, error } = await (req.supabase || supabase)
+            .from('team')
+            .select('*')
+            .eq('id', id)
+            .single();
 
         if (error) {
             // If no rows found, Supabase returns a PGRST116 error
@@ -50,7 +54,11 @@ export const createTeam = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, error: 'Team name is required' });
         }
 
-        const { data, error } = await supabase.from('team').insert([teamData]).select().single();
+        const { data, error } = await (req.supabase || supabase)
+            .from('team')
+            .insert([teamData])
+            .select()
+            .single();
 
         if (error) throw error;
 
@@ -65,7 +73,7 @@ export const updateTeam = async (req: Request, res: Response) => {
         const { id } = req.params;
         const teamData: UpdateTeamDTO = req.body;
 
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('team')
             .update(teamData)
             .eq('id', id)
@@ -86,7 +94,7 @@ export const updateTeam = async (req: Request, res: Response) => {
 export const deleteTeam = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase.from('team').delete().eq('id', id);
+        const { error } = await (req.supabase || supabase).from('team').delete().eq('id', id);
 
         if (error) throw error;
 

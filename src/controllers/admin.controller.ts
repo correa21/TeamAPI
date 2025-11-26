@@ -4,7 +4,7 @@ import { CreateAdminDTO, UpdateAdminDTO } from '../types/database.types';
 
 export const getAllAdmins = async (req: Request, res: Response) => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('admin')
             .select('*')
             .order('created_at', { ascending: false });
@@ -20,7 +20,7 @@ export const getAllAdmins = async (req: Request, res: Response) => {
 export const getAdminByPlayerId = async (req: Request, res: Response) => {
     try {
         const { playerId } = req.params;
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('admin')
             .select('*')
             .eq('player_id', playerId)
@@ -40,7 +40,11 @@ export const getAdminByPlayerId = async (req: Request, res: Response) => {
 export const createAdmin = async (req: Request, res: Response) => {
     try {
         const adminData: CreateAdminDTO = req.body;
-        const { data, error } = await supabase.from('admin').insert([adminData]).select().single();
+        const { data, error } = await (req.supabase || supabase)
+            .from('admin')
+            .insert([adminData])
+            .select()
+            .single();
 
         if (error) throw error;
 
@@ -55,7 +59,7 @@ export const updateAdmin = async (req: Request, res: Response) => {
         const { id } = req.params;
         const adminData: UpdateAdminDTO = req.body;
 
-        const { data, error } = await supabase
+        const { data, error } = await (req.supabase || supabase)
             .from('admin')
             .update(adminData)
             .eq('id', id)
@@ -76,7 +80,7 @@ export const updateAdmin = async (req: Request, res: Response) => {
 export const deleteAdmin = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase.from('admin').delete().eq('id', id);
+        const { error } = await (req.supabase || supabase).from('admin').delete().eq('id', id);
 
         if (error) throw error;
 
