@@ -81,6 +81,42 @@ npm run build
 npm start
 ```
 
+## Docker Deployment
+
+### Quick Start with Docker
+
+```bash
+# Using Docker Compose (recommended)
+docker-compose up -d
+docker compose up -d
+
+# Or build and run manually
+docker build -t rugby-team-api .
+docker run -p 3000:3000 --env-file .env rugby-team-api
+```
+
+### Local Development (Docker)
+
+1. **Start the development server:**
+   ```bash
+   docker compose -f docker-compose.dev.yml up --build
+   ```
+   The API will be available at `http://localhost:3000`.
+
+2. **Stop the server:**
+   ```bash
+   docker compose -f docker-compose.dev.yml down
+   ```
+
+### Production Build (Docker)
+
+1. **Build and run:**
+   ```bash
+   docker compose up --build -d
+   ```
+
+📖 **[Full Deployment Guide →](DEPLOYMENT.md)**
+
 ## API Endpoints
 
 ### Teams
