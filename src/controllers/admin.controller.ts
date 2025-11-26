@@ -40,11 +40,7 @@ export const getAdminByPlayerId = async (req: Request, res: Response) => {
 export const createAdmin = async (req: Request, res: Response) => {
     try {
         const adminData: CreateAdminDTO = req.body;
-        const { data, error } = await supabase
-            .from('admin')
-            .insert([adminData])
-            .select()
-            .single();
+        const { data, error } = await supabase.from('admin').insert([adminData]).select().single();
 
         if (error) throw error;
 
@@ -80,10 +76,7 @@ export const updateAdmin = async (req: Request, res: Response) => {
 export const deleteAdmin = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase
-            .from('admin')
-            .delete()
-            .eq('id', id);
+        const { error } = await supabase.from('admin').delete().eq('id', id);
 
         if (error) throw error;
 

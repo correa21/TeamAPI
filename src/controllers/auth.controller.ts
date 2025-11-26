@@ -45,12 +45,14 @@ export const register = async (req: Request, res: Response) => {
         // 2. Create player record linked to auth user
         const { data: player, error: playerError } = await supabase
             .from('player')
-            .insert([{
-                ...playerData,
-                email,
-                auth_user_id: authData.user.id,
-                password: 'MANAGED_BY_SUPABASE_AUTH', // Not used, managed by Supabase
-            }])
+            .insert([
+                {
+                    ...playerData,
+                    email,
+                    auth_user_id: authData.user.id,
+                    password: 'MANAGED_BY_SUPABASE_AUTH' // Not used, managed by Supabase
+                }
+            ])
             .select()
             .single();
 
@@ -96,7 +98,7 @@ export const login = async (req: Request, res: Response) => {
 
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
-            password,
+            password
         });
 
         if (error) {
@@ -207,7 +209,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
         }
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: 'http://localhost:3000/reset-password',
+            redirectTo: 'http://localhost:3000/reset-password'
         });
 
         if (error) {

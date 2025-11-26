@@ -96,10 +96,7 @@ export const updatePayment = async (req: Request, res: Response) => {
 export const deletePayment = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase
-            .from('payments')
-            .delete()
-            .eq('id', id);
+        const { error } = await supabase.from('payments').delete().eq('id', id);
 
         if (error) throw error;
 

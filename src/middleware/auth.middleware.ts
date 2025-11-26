@@ -1,11 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { supabase } from '../config/supabase';
 
-export const authMiddleware = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const authHeader = req.headers.authorization;
 
@@ -19,7 +15,10 @@ export const authMiddleware = async (
         const token = authHeader.substring(7);
 
         // Verify the JWT token with Supabase
-        const { data: { user }, error } = await supabase.auth.getUser(token);
+        const {
+            data: { user },
+            error
+        } = await supabase.auth.getUser(token);
 
         if (error || !user) {
             return res.status(401).json({
@@ -41,11 +40,7 @@ export const authMiddleware = async (
 };
 
 // Optional: Admin role check middleware
-export const adminMiddleware = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const adminMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = (req as any).user;
 

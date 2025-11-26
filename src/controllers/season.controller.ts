@@ -20,11 +20,7 @@ export const getAllSeasons = async (req: Request, res: Response) => {
 export const getSeasonById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { data, error } = await supabase
-            .from('season')
-            .select('*')
-            .eq('id', id)
-            .single();
+        const { data, error } = await supabase.from('season').select('*').eq('id', id).single();
 
         if (error) throw error;
         if (!data) {
@@ -80,10 +76,7 @@ export const updateSeason = async (req: Request, res: Response) => {
 export const deleteSeason = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase
-            .from('season')
-            .delete()
-            .eq('id', id);
+        const { error } = await supabase.from('season').delete().eq('id', id);
 
         if (error) throw error;
 

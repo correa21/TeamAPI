@@ -54,11 +54,7 @@ export const getStatsBySeasonId = async (req: Request, res: Response) => {
 export const getStatsById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { data, error } = await supabase
-            .from('stats')
-            .select('*')
-            .eq('id', id)
-            .single();
+        const { data, error } = await supabase.from('stats').select('*').eq('id', id).single();
 
         if (error) throw error;
         if (!data) {
@@ -74,11 +70,7 @@ export const getStatsById = async (req: Request, res: Response) => {
 export const createStats = async (req: Request, res: Response) => {
     try {
         const statsData: CreateStatsDTO = req.body;
-        const { data, error } = await supabase
-            .from('stats')
-            .insert([statsData])
-            .select()
-            .single();
+        const { data, error } = await supabase.from('stats').insert([statsData]).select().single();
 
         if (error) throw error;
 
@@ -114,10 +106,7 @@ export const updateStats = async (req: Request, res: Response) => {
 export const deleteStats = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase
-            .from('stats')
-            .delete()
-            .eq('id', id);
+        const { error } = await supabase.from('stats').delete().eq('id', id);
 
         if (error) throw error;
 
