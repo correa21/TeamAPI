@@ -859,7 +859,7 @@ router.get('/seasons/:id', seasonController.getSeasonById);
  *       201:
  *         description: Season created
  */
-router.post('/seasons', seasonController.createSeason);
+router.post('/seasons', authMiddleware, adminMiddleware, seasonController.createSeason);
 
 /**
  * @swagger
@@ -877,7 +877,7 @@ router.post('/seasons', seasonController.createSeason);
  *       200:
  *         description: Season updated
  */
-router.put('/seasons/:id', seasonController.updateSeason);
+router.put('/seasons/:id', authMiddleware, adminMiddleware, seasonController.updateSeason);
 
 /**
  * @swagger
@@ -895,7 +895,7 @@ router.put('/seasons/:id', seasonController.updateSeason);
  *       200:
  *         description: Season deleted
  */
-router.delete('/seasons/:id', seasonController.deleteSeason);
+router.delete('/seasons/:id', authMiddleware, adminMiddleware, seasonController.deleteSeason);
 
 // ==================== STATS ROUTES ====================
 
