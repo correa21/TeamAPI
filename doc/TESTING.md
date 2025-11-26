@@ -32,12 +32,12 @@ npm run test:coverage
 
 ## 📁 Test Files
 
-- **Integration Tests**: `tests/integration/`
-  - [`teams.test.ts`](tests/integration/teams.test.ts) - Team CRUD tests
-  - [`auth.test.ts`](tests/integration/auth.test.ts) - Authentication tests
-  - [`players-stats.test.ts`](tests/integration/players-stats.test.ts) - Player & stats tests
+- **Integration Tests**: `../tests/integration/`
+  - [`teams.test.ts`](../tests/integration/teams.test.ts) - Team CRUD tests
+  - [`auth.test.ts`](../tests/integration/auth.test.ts) - Authentication tests
+  - [`players-stats.test.ts`](../tests/integration/players-stats.test.ts) - Player & stats tests
 
-- **Test Helpers**: [`tests/helpers/testHelpers.ts`](tests/helpers/testHelpers.ts)
+- **Test Helpers**: [`../tests/helpers/testHelpers.ts`](../tests/helpers/testHelpers.ts)
 
 ## 🧰 Manual Testing Tools
 
@@ -54,7 +54,7 @@ http://localhost:3000/api-docs
 Complete API documentation with "Try it out" functionality.
 
 ### 3. Postman Collection
-Import [`Rugby_Team_API.postman_collection.json`](Rugby_Team_API.postman_collection.json) into Postman or Insomnia.
+Import [`Rugby_Team_API.postman_collection.json`](../Rugby_Team_API.postman_collection.json) into Postman or Insomnia.
 
 ## 📚 Full Documentation
 

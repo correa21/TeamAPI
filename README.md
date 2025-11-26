@@ -115,7 +115,7 @@ docker run -p 3000:3000 --env-file .env rugby-team-api
    docker compose up --build -d
    ```
 
-📖 **[Full Deployment Guide →](DEPLOYMENT.md)**
+📖 **[Full Deployment Guide →](doc/DEPLOYMENT.md)**
 
 ## API Endpoints
 
@@ -266,7 +266,7 @@ npm run test:coverage    # With coverage
 - **Swagger UI**: http://localhost:3000/api-docs
 - **Postman**: Import `Rugby_Team_API.postman_collection.json`
 
-📖 **[Complete Testing Guide →](TESTING.md)**
+📖 **[Complete Testing Guide →](doc/TESTING.md)**
 
 ## License
 
