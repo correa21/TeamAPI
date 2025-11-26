@@ -23,6 +23,9 @@
       "prettier --write"
     ]
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "keywords": [
     "rugby",
     "api",

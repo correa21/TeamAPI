@@ -22,7 +22,7 @@ RESTful API for managing Rugby team data, including players, teams, finances, an
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v20 or higher)
 - npm or yarn
 - Supabase account and project
 
