@@ -65,6 +65,7 @@ export interface Season {
     id: number;
     modality: string;
     name: string;
+    is_current: boolean;
     created_at: string;
     updated_at: string;
 }
@@ -133,6 +134,7 @@ export interface CreateAdminDTO {
 export interface CreateSeasonDTO {
     modality: string;
     name: string;
+    is_current?: boolean;
 }
 
 export interface CreateStatsDTO {

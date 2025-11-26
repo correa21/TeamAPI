@@ -243,6 +243,7 @@ Returned by `GET /players` for public access.
   id: number
   modality: string (e.g., "15s", "7s")
   name: string (unique)
+  is_current: boolean
   created_at: datetime
   updated_at: datetime
 }
