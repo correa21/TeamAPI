@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS public.season (
     id SERIAL PRIMARY KEY,
     modality VARCHAR(50) NOT NULL,
     name VARCHAR(255) UNIQUE NOT NULL,
+    is_current BOOLEAN DEFAULT false,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -219,3 +220,56 @@ WHERE p.eligibility = true;
 
 -- Grant access to public (anon) and logged in users
 GRANT SELECT ON public.roster_view TO anon, authenticated;
+
+-- ==========================================
+-- 6. AUTOMATION TRIGGERS
+-- ==========================================
+
+-- Function to handle new player creation
+CREATE OR REPLACE FUNCTION public.handle_new_player()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Create default Payment record
+  INSERT INTO public.payments (player_id, total_payed, total_debt, debt)
+  VALUES (NEW.id, 0, 0, false);
+
+  -- Create default Affiliation record
+  INSERT INTO public.affiliations (player_id, federation, association)
+  VALUES (NEW.id, false, false);
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger: After Player Created
+DROP TRIGGER IF EXISTS on_player_created ON public.player;
+CREATE TRIGGER on_player_created
+  AFTER INSERT ON public.player
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_player();
+
+-- ==========================================
+-- 7. SEASON AUTOMATION
+-- ==========================================
+
+-- 7.1 Function to handle current season logic
+CREATE OR REPLACE FUNCTION public.handle_current_season()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- If the new/updated season is marked as current
+  IF NEW.is_current = true THEN
+    -- Set all OTHER seasons to not current
+    UPDATE public.season
+    SET is_current = false
+    WHERE id != NEW.id AND is_current = true;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 7.2 Trigger: Before Insert or Update on Season
+DROP TRIGGER IF EXISTS on_season_current_change ON public.season;
+CREATE TRIGGER on_season_current_change
+  BEFORE INSERT OR UPDATE ON public.season
+  FOR EACH ROW
+  WHEN (NEW.is_current = true)
+  EXECUTE FUNCTION public.handle_current_season();
