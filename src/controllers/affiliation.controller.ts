@@ -80,10 +80,7 @@ export const updateAffiliation = async (req: Request, res: Response) => {
 export const deleteAffiliation = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase
-            .from('affiliations')
-            .delete()
-            .eq('id', id);
+        const { error } = await supabase.from('affiliations').delete().eq('id', id);
 
         if (error) throw error;
 

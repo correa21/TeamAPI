@@ -166,7 +166,6 @@ router.get('/auth/me', authMiddleware, authController.getCurrentUser);
  */
 router.post('/auth/forgot-password', authController.forgotPassword);
 
-
 // ==================== TEAM ROUTES ====================
 
 /**

@@ -80,10 +80,7 @@ export const updatePlayerNumber = async (req: Request, res: Response) => {
 export const deletePlayerNumber = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { error } = await supabase
-            .from('player_number')
-            .delete()
-            .eq('id', id);
+        const { error } = await supabase.from('player_number').delete().eq('id', id);
 
         if (error) throw error;
 

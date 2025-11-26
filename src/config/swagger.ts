@@ -6,21 +6,22 @@ const options: swaggerJsdoc.Options = {
         info: {
             title: 'Rugby Team API',
             version: '1.0.0',
-            description: 'RESTful API for managing Rugby team data, including players, teams, finances, and statistics.',
+            description:
+                'RESTful API for managing Rugby team data, including players, teams, finances, and statistics.',
             contact: {
                 name: 'Rugby Team',
-                url: 'https://your-team.com',
-            },
+                url: 'https://your-team.com'
+            }
         },
         servers: [
             {
                 url: 'http://localhost:3000',
-                description: 'Development server',
+                description: 'Development server'
             },
             {
                 url: process.env.API_URL || 'https://api.your-team.com',
-                description: 'Production server',
-            },
+                description: 'Production server'
+            }
         ],
         components: {
             securitySchemes: {
@@ -28,8 +29,8 @@ const options: swaggerJsdoc.Options = {
                     type: 'http',
                     scheme: 'bearer',
                     bearerFormat: 'JWT',
-                    description: 'Enter your Supabase JWT token',
-                },
+                    description: 'Enter your Supabase JWT token'
+                }
             },
             schemas: {
                 Team: {
@@ -39,366 +40,374 @@ const options: swaggerJsdoc.Options = {
                         id: {
                             type: 'string',
                             format: 'uuid',
-                            description: 'Unique team identifier',
+                            description: 'Unique team identifier'
                         },
                         name: {
                             type: 'string',
                             description: 'Team name',
-                            example: 'My Team',
+                            example: 'My Team'
                         },
                         region: {
                             type: 'string',
                             description: 'Team region',
-                            example: 'Ciudad de México',
+                            example: 'Ciudad de México'
                         },
                         created_at: {
                             type: 'string',
-                            format: 'date-time',
+                            format: 'date-time'
                         },
                         updated_at: {
                             type: 'string',
-                            format: 'date-time',
-                        },
-                    },
+                            format: 'date-time'
+                        }
+                    }
                 },
                 Player: {
                     type: 'object',
-                    required: ['team_id', 'player_name', 'date_of_birth', 'curp', 'email', 'password', 'federation_id'],
+                    required: [
+                        'team_id',
+                        'player_name',
+                        'date_of_birth',
+                        'curp',
+                        'email',
+                        'password',
+                        'federation_id'
+                    ],
                     properties: {
                         id: {
                             type: 'integer',
-                            description: 'Unique player identifier',
+                            description: 'Unique player identifier'
                         },
                         team_id: {
                             type: 'string',
                             format: 'uuid',
-                            description: 'Team UUID',
+                            description: 'Team UUID'
                         },
                         player_name: {
                             type: 'string',
-                            example: 'Juan Pérez',
+                            example: 'Juan Pérez'
                         },
                         date_of_birth: {
                             type: 'string',
                             format: 'date',
-                            example: '1995-05-15',
+                            example: '1995-05-15'
                         },
                         curp: {
                             type: 'string',
                             description: 'Mexican CURP',
-                            example: 'PEXJ950515HDFRNN01',
+                            example: 'PEXJ950515HDFRNN01'
                         },
                         short_size: {
                             type: 'string',
                             nullable: true,
-                            example: 'M',
+                            example: 'M'
                         },
                         jersey_size: {
                             type: 'string',
                             nullable: true,
-                            example: 'L',
+                            example: 'L'
                         },
                         email: {
                             type: 'string',
                             format: 'email',
-                            example: 'juan@example.com',
+                            example: 'juan@example.com'
                         },
                         phone_number: {
                             type: 'string',
                             nullable: true,
-                            example: '+525512345678',
+                            example: '+525512345678'
                         },
                         password: {
                             type: 'string',
                             format: 'password',
-                            description: 'Hashed password',
+                            description: 'Hashed password'
                         },
                         federation_id: {
                             type: 'integer',
-                            example: 12345,
+                            example: 12345
                         },
                         eligibility: {
                             type: 'boolean',
-                            default: true,
+                            default: true
                         },
                         category: {
                             type: 'string',
                             nullable: true,
-                            example: 'Senior',
+                            example: 'Senior'
                         },
                         profile_picture: {
                             type: 'string',
                             nullable: true,
-                            description: 'URL to profile picture',
+                            description: 'URL to profile picture'
                         },
                         created_at: {
                             type: 'string',
-                            format: 'date-time',
+                            format: 'date-time'
                         },
                         updated_at: {
                             type: 'string',
-                            format: 'date-time',
-                        },
-                    },
+                            format: 'date-time'
+                        }
+                    }
                 },
                 PlayerNumber: {
                     type: 'object',
                     required: ['player_id', 'team_id', 'player_number'],
                     properties: {
                         id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         player_id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         team_id: {
                             type: 'string',
-                            format: 'uuid',
+                            format: 'uuid'
                         },
                         player_number: {
                             type: 'integer',
-                            example: 10,
+                            example: 10
                         },
                         created_at: {
                             type: 'string',
-                            format: 'date-time',
+                            format: 'date-time'
                         },
                         updated_at: {
                             type: 'string',
-                            format: 'date-time',
-                        },
-                    },
+                            format: 'date-time'
+                        }
+                    }
                 },
                 Affiliations: {
                     type: 'object',
                     required: ['player_id'],
                     properties: {
                         id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         player_id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         federation: {
                             type: 'boolean',
-                            default: false,
+                            default: false
                         },
                         association: {
                             type: 'boolean',
-                            default: false,
+                            default: false
                         },
                         created_at: {
                             type: 'string',
-                            format: 'date-time',
+                            format: 'date-time'
                         },
                         updated_at: {
                             type: 'string',
-                            format: 'date-time',
-                        },
-                    },
+                            format: 'date-time'
+                        }
+                    }
                 },
                 Payments: {
                     type: 'object',
                     required: ['player_id'],
                     properties: {
                         id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         player_id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         total_payed: {
                             type: 'integer',
                             description: 'Total amount paid in cents or smallest currency unit',
-                            default: 0,
+                            default: 0
                         },
                         total_debt: {
                             type: 'integer',
                             description: 'Total debt in cents or smallest currency unit',
-                            default: 0,
+                            default: 0
                         },
                         debt: {
                             type: 'boolean',
                             description: 'Whether player has outstanding debt',
-                            default: false,
+                            default: false
                         },
                         created_at: {
                             type: 'string',
-                            format: 'date-time',
+                            format: 'date-time'
                         },
                         updated_at: {
                             type: 'string',
-                            format: 'date-time',
-                        },
-                    },
+                            format: 'date-time'
+                        }
+                    }
                 },
                 Admin: {
                     type: 'object',
                     required: ['player_id', 'role'],
                     properties: {
                         id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         player_id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         role: {
                             type: 'string',
-                            example: 'super_admin',
+                            example: 'super_admin'
                         },
                         created_at: {
                             type: 'string',
-                            format: 'date-time',
+                            format: 'date-time'
                         },
                         updated_at: {
                             type: 'string',
-                            format: 'date-time',
-                        },
-                    },
+                            format: 'date-time'
+                        }
+                    }
                 },
                 Season: {
                     type: 'object',
                     required: ['modality', 'name'],
                     properties: {
                         id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         modality: {
                             type: 'string',
-                            example: '15s',
+                            example: '15s'
                         },
                         name: {
                             type: 'string',
-                            example: 'Temporada 2024',
+                            example: 'Temporada 2024'
                         },
                         created_at: {
                             type: 'string',
-                            format: 'date-time',
+                            format: 'date-time'
                         },
                         updated_at: {
                             type: 'string',
-                            format: 'date-time',
-                        },
-                    },
+                            format: 'date-time'
+                        }
+                    }
                 },
                 Stats: {
                     type: 'object',
                     required: ['player_id', 'season_id'],
                     properties: {
                         id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         player_id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         season_id: {
-                            type: 'integer',
+                            type: 'integer'
                         },
                         yellow_card: {
                             type: 'integer',
-                            default: 0,
+                            default: 0
                         },
                         red_card: {
                             type: 'integer',
-                            default: 0,
+                            default: 0
                         },
                         try: {
                             type: 'integer',
-                            default: 0,
+                            default: 0
                         },
                         drop: {
                             type: 'integer',
-                            default: 0,
+                            default: 0
                         },
                         conversion: {
                             type: 'integer',
-                            default: 0,
+                            default: 0
                         },
                         penalty_scored: {
                             type: 'integer',
-                            default: 0,
+                            default: 0
                         },
                         points: {
                             type: 'integer',
-                            default: 0,
+                            default: 0
                         },
                         created_at: {
                             type: 'string',
-                            format: 'date-time',
+                            format: 'date-time'
                         },
                         updated_at: {
                             type: 'string',
-                            format: 'date-time',
-                        },
-                    },
+                            format: 'date-time'
+                        }
+                    }
                 },
                 Error: {
                     type: 'object',
                     properties: {
                         success: {
                             type: 'boolean',
-                            example: false,
+                            example: false
                         },
                         error: {
                             type: 'string',
-                            example: 'Error message',
-                        },
-                    },
+                            example: 'Error message'
+                        }
+                    }
                 },
                 Success: {
                     type: 'object',
                     properties: {
                         success: {
                             type: 'boolean',
-                            example: true,
+                            example: true
                         },
                         data: {
-                            type: 'object',
-                        },
-                    },
-                },
-            },
+                            type: 'object'
+                        }
+                    }
+                }
+            }
         },
         tags: [
             {
                 name: 'Authentication',
-                description: 'User authentication and registration endpoints',
+                description: 'User authentication and registration endpoints'
             },
             {
                 name: 'Teams',
-                description: 'Team management endpoints',
+                description: 'Team management endpoints'
             },
             {
                 name: 'Players',
-                description: 'Player management endpoints',
+                description: 'Player management endpoints'
             },
             {
                 name: 'Player Numbers',
-                description: 'Jersey number assignment endpoints',
+                description: 'Jersey number assignment endpoints'
             },
             {
                 name: 'Affiliations',
-                description: 'Player affiliation management',
+                description: 'Player affiliation management'
             },
             {
                 name: 'Payments',
-                description: 'Financial tracking endpoints',
+                description: 'Financial tracking endpoints'
             },
             {
                 name: 'Admins',
-                description: 'Admin role management',
+                description: 'Admin role management'
             },
             {
                 name: 'Seasons',
-                description: 'Season management endpoints',
+                description: 'Season management endpoints'
             },
             {
                 name: 'Stats',
-                description: 'Player statistics endpoints',
-            },
-        ],
+                description: 'Player statistics endpoints'
+            }
+        ]
     },
-    apis: ['./src/routes/*.ts'], // Path to route files
+    apis: ['./src/routes/*.ts'] // Path to route files
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

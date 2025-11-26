@@ -22,7 +22,7 @@ RESTful API for managing Rugby team data, including players, teams, finances, an
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v20 or higher)
 - npm or yarn
 - Supabase account and project
 
@@ -115,7 +115,7 @@ docker run -p 3000:3000 --env-file .env rugby-team-api
    docker compose up --build -d
    ```
 
-📖 **[Full Deployment Guide →](doc/DEPLOYMENT.md)**
+📖 **[Full Deployment Guide →](docs/DEPLOYMENT.md)**
 
 ## API Endpoints
 
@@ -266,7 +266,7 @@ npm run test:coverage    # With coverage
 - **Swagger UI**: http://localhost:3000/api-docs
 - **Postman**: Import `Rugby_Team_API.postman_collection.json`
 
-📖 **[Complete Testing Guide →](doc/TESTING.md)**
+📖 **[Complete Testing Guide →](docs/TESTING.md)**
 
 ## License
 
