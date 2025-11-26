@@ -115,11 +115,21 @@ export const login = async (req: Request, res: Response) => {
             .eq('auth_user_id', data.user.id)
             .single();
 
+        // Check if user is admin
+        const { data: adminData } = await supabaseAdmin
+            .from('admin')
+            .select('id')
+            .eq('player_id', player.id)
+            .single();
+
+        const isAdmin = !!adminData;
+
         res.json({
             success: true,
             data: {
                 user: data.user,
                 player,
+                isAdmin,
                 session: data.session,
                 token: data.session.access_token
             }
@@ -179,11 +189,15 @@ export const getCurrentUser = async (req: Request, res: Response) => {
             .eq('auth_user_id', user.id)
             .single();
 
+        // Check if user is admin using RPC
+        const { data: isAdmin } = await req.supabase.rpc('is_admin');
+
         res.json({
             success: true,
             data: {
                 user,
-                player
+                player,
+                isAdmin: !!isAdmin
             }
         });
     } catch (error: any) {

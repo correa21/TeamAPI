@@ -12,6 +12,7 @@ export interface Player {
     player_name: string;
     date_of_birth: string;
     curp: string;
+    rfc?: string;
     short_size: string | null;
     jersey_size: string | null;
     email: string;
@@ -96,6 +97,7 @@ export interface CreatePlayerDTO {
     player_name: string;
     date_of_birth: string;
     curp: string;
+    rfc?: string;
     short_size?: string;
     jersey_size?: string;
     email: string;
