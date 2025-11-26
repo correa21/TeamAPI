@@ -256,7 +256,7 @@ router.get('/teams/:id', teamController.getTeamById);
  *                 data:
  *                   $ref: '#/components/schemas/Team'
  */
-router.post('/teams', teamController.createTeam);
+router.post('/teams', authMiddleware, adminMiddleware, teamController.createTeam);
 
 /**
  * @swagger
@@ -286,7 +286,7 @@ router.post('/teams', teamController.createTeam);
  *       200:
  *         description: Team updated successfully
  */
-router.put('/teams/:id', teamController.updateTeam);
+router.put('/teams/:id', authMiddleware, adminMiddleware, teamController.updateTeam);
 
 /**
  * @swagger
@@ -305,7 +305,7 @@ router.put('/teams/:id', teamController.updateTeam);
  *       200:
  *         description: Team deleted successfully
  */
-router.delete('/teams/:id', teamController.deleteTeam);
+router.delete('/teams/:id', authMiddleware, adminMiddleware, teamController.deleteTeam);
 
 // ==================== PLAYER ROUTES ====================
 
@@ -389,7 +389,7 @@ router.get('/players/team/:teamId', playerController.getPlayersByTeam);
  *       201:
  *         description: Player created successfully
  */
-router.post('/players', playerController.createPlayer);
+router.post('/players', authMiddleware, adminMiddleware, playerController.createPlayer);
 
 /**
  * @swagger
@@ -413,7 +413,7 @@ router.post('/players', playerController.createPlayer);
  *       200:
  *         description: Player updated successfully
  */
-router.put('/players/:id', playerController.updatePlayer);
+router.put('/players/:id', authMiddleware, playerController.updatePlayer);
 
 /**
  * @swagger
@@ -431,7 +431,7 @@ router.put('/players/:id', playerController.updatePlayer);
  *       200:
  *         description: Player deleted successfully
  */
-router.delete('/players/:id', playerController.deletePlayer);
+router.delete('/players/:id', authMiddleware, adminMiddleware, playerController.deletePlayer);
 
 // ==================== PLAYER NUMBER ROUTES ====================
 
@@ -481,7 +481,12 @@ router.get('/player-numbers/player/:playerId', playerNumberController.getPlayerN
  *       201:
  *         description: Player number assigned successfully
  */
-router.post('/player-numbers', playerNumberController.createPlayerNumber);
+router.post(
+    '/player-numbers',
+    authMiddleware,
+    adminMiddleware,
+    playerNumberController.createPlayerNumber
+);
 
 /**
  * @swagger
@@ -499,7 +504,12 @@ router.post('/player-numbers', playerNumberController.createPlayerNumber);
  *       200:
  *         description: Player number updated
  */
-router.put('/player-numbers/:id', playerNumberController.updatePlayerNumber);
+router.put(
+    '/player-numbers/:id',
+    authMiddleware,
+    adminMiddleware,
+    playerNumberController.updatePlayerNumber
+);
 
 /**
  * @swagger
@@ -517,7 +527,12 @@ router.put('/player-numbers/:id', playerNumberController.updatePlayerNumber);
  *       200:
  *         description: Player number deleted
  */
-router.delete('/player-numbers/:id', playerNumberController.deletePlayerNumber);
+router.delete(
+    '/player-numbers/:id',
+    authMiddleware,
+    adminMiddleware,
+    playerNumberController.deletePlayerNumber
+);
 
 // ==================== AFFILIATION ROUTES ====================
 
@@ -567,7 +582,12 @@ router.get('/affiliations/player/:playerId', affiliationController.getAffiliatio
  *       201:
  *         description: Affiliation created
  */
-router.post('/affiliations', affiliationController.createAffiliation);
+router.post(
+    '/affiliations',
+    authMiddleware,
+    adminMiddleware,
+    affiliationController.createAffiliation
+);
 
 /**
  * @swagger
@@ -585,7 +605,12 @@ router.post('/affiliations', affiliationController.createAffiliation);
  *       200:
  *         description: Affiliation updated
  */
-router.put('/affiliations/:id', affiliationController.updateAffiliation);
+router.put(
+    '/affiliations/:id',
+    authMiddleware,
+    adminMiddleware,
+    affiliationController.updateAffiliation
+);
 
 /**
  * @swagger
@@ -603,7 +628,12 @@ router.put('/affiliations/:id', affiliationController.updateAffiliation);
  *       200:
  *         description: Affiliation deleted
  */
-router.delete('/affiliations/:id', affiliationController.deleteAffiliation);
+router.delete(
+    '/affiliations/:id',
+    authMiddleware,
+    adminMiddleware,
+    affiliationController.deleteAffiliation
+);
 
 // ==================== PAYMENT ROUTES ====================
 
@@ -628,7 +658,7 @@ router.delete('/affiliations/:id', affiliationController.deleteAffiliation);
  *                   items:
  *                     $ref: '#/components/schemas/Payments'
  */
-router.get('/payments', paymentController.getAllPayments);
+router.get('/payments', authMiddleware, adminMiddleware, paymentController.getAllPayments);
 
 /**
  * @swagger
@@ -646,7 +676,7 @@ router.get('/payments', paymentController.getAllPayments);
  *       200:
  *         description: Payment details
  */
-router.get('/payments/player/:playerId', paymentController.getPaymentByPlayerId);
+router.get('/payments/player/:playerId', authMiddleware, paymentController.getPaymentByPlayerId);
 
 /**
  * @swagger
@@ -669,7 +699,7 @@ router.get('/payments/player/:playerId', paymentController.getPaymentByPlayerId)
  *                   items:
  *                     $ref: '#/components/schemas/Payments'
  */
-router.get('/payments/debt', paymentController.getPlayersWithDebt);
+router.get('/payments/debt', authMiddleware, adminMiddleware, paymentController.getPlayersWithDebt);
 
 /**
  * @swagger
@@ -687,7 +717,7 @@ router.get('/payments/debt', paymentController.getPlayersWithDebt);
  *       201:
  *         description: Payment created
  */
-router.post('/payments', paymentController.createPayment);
+router.post('/payments', authMiddleware, adminMiddleware, paymentController.createPayment);
 
 /**
  * @swagger
@@ -705,7 +735,7 @@ router.post('/payments', paymentController.createPayment);
  *       200:
  *         description: Payment updated
  */
-router.put('/payments/:id', paymentController.updatePayment);
+router.put('/payments/:id', authMiddleware, adminMiddleware, paymentController.updatePayment);
 
 /**
  * @swagger
@@ -723,7 +753,7 @@ router.put('/payments/:id', paymentController.updatePayment);
  *       200:
  *         description: Payment deleted
  */
-router.delete('/payments/:id', paymentController.deletePayment);
+router.delete('/payments/:id', authMiddleware, adminMiddleware, paymentController.deletePayment);
 
 // ==================== ADMIN ROUTES ====================
 
@@ -737,7 +767,7 @@ router.delete('/payments/:id', paymentController.deletePayment);
  *       200:
  *         description: List of all admins
  */
-router.get('/admins', adminController.getAllAdmins);
+router.get('/admins', authMiddleware, adminMiddleware, adminController.getAllAdmins);
 
 /**
  * @swagger
@@ -755,7 +785,7 @@ router.get('/admins', adminController.getAllAdmins);
  *       200:
  *         description: Admin details
  */
-router.get('/admins/player/:playerId', adminController.getAdminByPlayerId);
+router.get('/admins/player/:playerId', authMiddleware, adminController.getAdminByPlayerId);
 
 /**
  * @swagger
@@ -773,7 +803,7 @@ router.get('/admins/player/:playerId', adminController.getAdminByPlayerId);
  *       201:
  *         description: Admin created
  */
-router.post('/admins', adminController.createAdmin);
+router.post('/admins', authMiddleware, adminMiddleware, adminController.createAdmin);
 
 /**
  * @swagger
@@ -791,7 +821,7 @@ router.post('/admins', adminController.createAdmin);
  *       200:
  *         description: Admin updated
  */
-router.put('/admins/:id', adminController.updateAdmin);
+router.put('/admins/:id', authMiddleware, adminMiddleware, adminController.updateAdmin);
 
 /**
  * @swagger
@@ -809,7 +839,7 @@ router.put('/admins/:id', adminController.updateAdmin);
  *       200:
  *         description: Admin deleted
  */
-router.delete('/admins/:id', adminController.deleteAdmin);
+router.delete('/admins/:id', authMiddleware, adminMiddleware, adminController.deleteAdmin);
 
 // ==================== SEASON ROUTES ====================
 
@@ -992,7 +1022,7 @@ router.get('/stats/season/:seasonId', statsController.getStatsBySeasonId);
  *       201:
  *         description: Stats created
  */
-router.post('/stats', statsController.createStats);
+router.post('/stats', authMiddleware, adminMiddleware, statsController.createStats);
 
 /**
  * @swagger
@@ -1010,7 +1040,7 @@ router.post('/stats', statsController.createStats);
  *       200:
  *         description: Stats updated
  */
-router.put('/stats/:id', statsController.updateStats);
+router.put('/stats/:id', authMiddleware, adminMiddleware, statsController.updateStats);
 
 /**
  * @swagger
@@ -1028,6 +1058,6 @@ router.put('/stats/:id', statsController.updateStats);
  *       200:
  *         description: Stats deleted
  */
-router.delete('/stats/:id', statsController.deleteStats);
+router.delete('/stats/:id', authMiddleware, adminMiddleware, statsController.deleteStats);
 
 export default router;
