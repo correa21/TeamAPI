@@ -2,6 +2,7 @@ import request from 'supertest';
 import {
     cleanupTestData,
     createTestTeam,
+    createTestAdmin
 } from '../helpers/testHelpers';
 import { app } from '../setup';
 
@@ -31,6 +32,7 @@ describe('Team API Endpoints', () => {
 
     describe('POST /api/teams', () => {
         it('should create a new team', async () => {
+            const { token } = await createTestAdmin();
             const timestamp = Date.now();
             const newTeam = {
                 name: `New Test Team ${timestamp}`,
@@ -39,6 +41,7 @@ describe('Team API Endpoints', () => {
 
             const response = await request(app)
                 .post('/api/teams')
+                .set('Authorization', `Bearer ${token}`)
                 .send(newTeam);
 
             expect(response.status).toBe(201);
@@ -48,8 +51,10 @@ describe('Team API Endpoints', () => {
         });
 
         it('should fail without required fields', async () => {
+            const { token } = await createTestAdmin();
             const response = await request(app)
                 .post('/api/teams')
+                .set('Authorization', `Bearer ${token}`)
                 .send({});
 
             expect(response.status).toBe(400);
@@ -78,12 +83,14 @@ describe('Team API Endpoints', () => {
 
     describe('PUT /api/teams/:id', () => {
         it('should update a team', async () => {
+            const { token } = await createTestAdmin();
             const team = await createTestTeam();
             const timestamp = Date.now();
             const updates = { name: `Updated Team Name ${timestamp}` };
 
             const response = await request(app)
                 .put(`/api/teams/${team.id}`)
+                .set('Authorization', `Bearer ${token}`)
                 .send(updates);
 
             expect(response.status).toBe(200);
@@ -94,9 +101,12 @@ describe('Team API Endpoints', () => {
 
     describe('DELETE /api/teams/:id', () => {
         it('should delete a team', async () => {
+            const { token } = await createTestAdmin();
             const team = await createTestTeam();
 
-            const response = await request(app).delete(`/api/teams/${team.id}`);
+            const response = await request(app)
+                .delete(`/api/teams/${team.id}`)
+                .set('Authorization', `Bearer ${token}`);
 
             expect(response.status).toBe(200);
             expect(response.body.success).toBe(true);

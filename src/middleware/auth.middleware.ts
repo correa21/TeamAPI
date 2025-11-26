@@ -54,19 +54,10 @@ export const adminMiddleware = async (req: Request, res: Response, next: NextFun
             });
         }
 
-        // Check if user is an admin using RLS-protected query
-        // If the user is NOT an admin, RLS returns 0 rows.
-        const { data, error } = await req.supabase
-            .from('admin')
-            .select('*')
-            .eq('player_id', user.id) // Assuming logic maps user.id -> player_id, verify this link
-            .single();
+        // Check if user is an admin using database function
+        const { data: isAdmin, error } = await req.supabase.rpc('is_admin');
 
-        // Note: In your schema, admin is linked to player_id (int), not auth_id (uuid).
-        // The is_admin() SQL function handles the join.
-        // Just querying the 'admin' table works because RLS 'SELECT' policy uses is_admin()
-
-        if (error || !data) {
+        if (error || !isAdmin) {
             return res.status(403).json({
                 success: false,
                 error: 'Forbidden: Admin access required'
