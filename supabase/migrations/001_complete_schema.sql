@@ -21,10 +21,11 @@ CREATE TABLE IF NOT EXISTS public.player (
     team_id UUID REFERENCES public.team(id),
     player_name VARCHAR(255) NOT NULL,
     date_of_birth DATE NOT NULL,
-    curp VARCHAR(20) UNIQUE NOT NULL,
+    curp VARCHAR(50) UNIQUE NOT NULL, -- Extended to 50 chars for foreign players
+    rfc VARCHAR(13), -- Registro Federal de Contribuyentes (Mexican Tax ID)
     email VARCHAR(255) UNIQUE NOT NULL,
     phone_number VARCHAR(20),
-    password VARCHAR(255) NOT NULL, -- Managed by App/Supabase
+    password VARCHAR(255), -- Managed by App/Supabase, nullable for CSV imports
     federation_id INTEGER UNIQUE NOT NULL,
     short_size VARCHAR(10),
     jersey_size VARCHAR(10),
